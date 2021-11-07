@@ -53,7 +53,7 @@ else
   # if more than one device was found prompt for the id of the one to be allowed/blocked
   printf "found %s devices\n" "${devicecount}"
   if [ $# -eq 0 ]; then
-    usbguard list-devices --blocked | awk -v pat="$filtertext" -F":" '$0 !~ pat'
+    usbguard list-devices | awk -v pat="$filtertext" -F":" '$0 !~ pat'
   else
     usbguard list-devices | awk -v pat="$filterargument" -F":" '$0 ~ pat'
   fi
