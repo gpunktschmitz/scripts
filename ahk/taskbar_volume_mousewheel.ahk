@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 ; Change volume using mouse scroll wheel over taskbar
 ;--------------------------------------------------------------------
 
-#if MouseIsOver("ahk_class Shell_TrayWnd")
+#if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 
 WheelUp::
 Send {Volume_Up}
