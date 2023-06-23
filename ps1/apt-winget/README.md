@@ -37,4 +37,4 @@ searches for winget packages `firefox` and `vscode`. if only one package is foun
 
 ### output
 
-![using apt function to install firefox and vscode](https://raw.github.com/gpunktschmitz/scripts/ps1/apt-winget/docu/apt-winget-firefox-vscode.png)
+![using apt function to install firefox and vscode](https://github.com/gpunktschmitz/scripts/blob/main/ps1/apt-winget/docu/apt-winget-firefox-vscode.png?raw=true)
