@@ -109,9 +109,10 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
 
             if (($userinput -lt $counter) -and ($userinput -ge 1)) {
                 Install-WinGetPackage -Id $selectionArray.$userinput
-            }
-            else {
-                Write-Error 'wrong input'
+            } else {
+                if($userinput -ne 0) {
+                    Write-Error 'wrong input'
+                }
             }
         }
         catch {
@@ -150,8 +151,7 @@ function Invoke-WinGet {
                 Write-Error "command ""$command"" not valid"
             }
         }
-    }
-    else {
+    } else {
         Write-Error 'command (and parameter) missing'
     }
 }
