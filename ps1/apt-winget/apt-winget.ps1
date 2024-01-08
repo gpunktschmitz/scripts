@@ -17,7 +17,6 @@ function Get-WinGetResultDelimiterArrayNumber($wingetResult) {
         }
         $counter++
     }
-    a
     # if not found it's most likely there is no result or an error
     return -1
 }
