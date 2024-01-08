@@ -39,8 +39,7 @@ function Get-WinGetResultLineSplitObject($line, $headerArray, $headerPositionArr
 
         if ($headerArray[-1] -eq $header) {
             $endPosition = $line.Length
-        }
-        else {
+        } else {
             $endPosition = $headerPositionArray[$arrayElement + 1] - 1
         }
         $length = $endPosition - $startPosition
@@ -91,8 +90,7 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
 
     if (($wingetResultObject.Count -eq 1) -and ($autoInstallIfOnlyOneFound -eq $true)) {
         Install-WinGetPackage -Id $wingetResultObject.Id
-    }
-    else {
+    } else {
         # show prompt and ask if any should be installed
         $counter = 1
 
@@ -124,8 +122,7 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
                     Write-Error 'wrong input'
                 }
             }
-        }
-        catch {
+        } catch {
             Write-Error 'only numbers allowed'
         }
     }
