@@ -73,6 +73,17 @@ function Get-WinGetResultObject($wingetResult) {
     }
 }
 
+function Invoke-WinGetUpgrade($all=$true) {
+    Write-Host "upgrading winget"
+    if($all) {
+        $allString = ' --all'
+    } else {
+        $allString =''
+    }
+    $argumentList = "upgrade --accept-package-agreements --accept-source-agreements --disable-interactivity $allString"
+    Start-Process 'winget' -ArgumentList $argumentList -NoNewWindow -Wait
+}
+
 function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) {
     $searchResult = &winget search $searchString
 
@@ -134,6 +145,9 @@ function Invoke-WinGet {
         $command, $paramterArray = $args
 
         switch -regex ($command) {
+            "upgrade" {
+                Invoke-WinGetUpgrade
+            }
             "list" {
                 Get-WinGetList
             }
