@@ -145,6 +145,9 @@ function Invoke-WinGet {
         $command, $paramterArray = $args
 
         switch -regex ($command) {
+            "help" {
+                Write-Host "available commands:`n  list     Display installed packages`n  search   Find and show packages to install`n  install  Installs the given package`n  upgrade  Performs available upgrades`n  help     Shows this help message"
+            }
             "upgrade" {
                 Invoke-WinGetUpgrade
             }
