@@ -68,6 +68,8 @@ function Get-WinGetResultObject($wingetResult) {
             }
             $counter++
         }
+    } else {
+        return -1
     }
 }
 
@@ -88,7 +90,9 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
     # cast the result explicitly to array - else one result would not count as 1 ?!
     $wingetResultObject = @(Get-WinGetResultObject -wingetResult $searchResult)
 
-    if (($wingetResultObject.Count -eq 1) -and ($autoInstallIfOnlyOneFound -eq $true)) {
+    if($wingetResultObject -eq -1) {
+        Write-Warning "nothing found"
+    } elseif (($wingetResultObject.Count -eq 1) -and ($autoInstallIfOnlyOneFound -eq $true)) {
         Install-WinGetPackage -Id $wingetResultObject.Id
     } else {
         # show prompt and ask if any should be installed
