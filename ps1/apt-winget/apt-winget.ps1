@@ -119,10 +119,11 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
         try {
             [uint16]$userinput = Read-Host -Prompt 'enter number to install package (ENTER to exit)'
 
-            if (($userinput -lt $counter) -and ($userinput -ge 1)) {
-                Install-WinGetPackage -Id $selectionArray.$userinput
-            } else {
-                if($userinput -ne 0) {
+            # do nothing when ENTER is pressed (which results in $userinput being '0')
+            if($userinput -ne 0) {
+                if(($userinput -lt $counter) -and ($userinput -ge 1)) {
+                    Install-WinGetPackage -Id $selectionArray.$userinput
+                } else {
                     Write-Error 'wrong input'
                 }
             }
