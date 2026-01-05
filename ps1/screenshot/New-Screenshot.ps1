@@ -2,7 +2,7 @@ function New-Screenshot($Path = "C:\tmp") {
   # source: https://woshub.com/take-user-desktop-screenshot-with-powershell/
 
   # Make sure that the directory to keep screenshots has been created, otherwise create it
-  If (!(test-path $path)) {
+  if (!(Test-Path $path)) {
     New-Item -ItemType Directory -Force -Path $path
   }
 
@@ -16,13 +16,13 @@ function New-Screenshot($Path = "C:\tmp") {
   # Create a graphic object
   $graphic = [System.Drawing.Graphics]::FromImage($image)
   $point = New-Object System.Drawing.Point(0, 0)
-  $graphic.CopyFromScreen($point, $point, $image.Size);
+  $graphic.CopyFromScreen($point, $point, $image.Size)
   $cursorBounds = New-Object System.Drawing.Rectangle([System.Windows.Forms.Cursor]::Position, [System.Windows.Forms.Cursor]::Current.Size)
 
   # Get a screenshot
   [System.Windows.Forms.Cursors]::Default.Draw($graphic, $cursorBounds)
 
-  $fileName = $env:computername + "_" + $env:username + "_" + "$((get-date).tostring('yyyy.MM.dd-HH.mm.ss')).png"
+  $fileName = $env:computername + "_" + $env:username + "_" + "$((Get-Date).tostring('yyyy.MM.dd-HH.mm.ss')).png"
   $filePath = Join-Path -Path $Path -ChildPath $fileName
 
   # Save the screenshot as a PNG file

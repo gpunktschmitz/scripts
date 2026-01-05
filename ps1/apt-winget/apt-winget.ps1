@@ -73,12 +73,12 @@ function Get-WinGetResultObject($wingetResult) {
     }
 }
 
-function Invoke-WinGetUpgrade($all=$true) {
+function Invoke-WinGetUpgrade($all = $true) {
     Write-Host "upgrading winget"
-    if($all) {
+    if ($all) {
         $allString = ' --all'
     } else {
-        $allString =''
+        $allString = ''
     }
     $argumentList = "upgrade --accept-package-agreements --accept-source-agreements --disable-interactivity $allString"
     Start-Process 'winget' -ArgumentList $argumentList -NoNewWindow -Wait
@@ -90,7 +90,7 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
     # cast the result explicitly to array - else one result would not count as 1 ?!
     $wingetResultObject = @(Get-WinGetResultObject -wingetResult $searchResult)
 
-    if($wingetResultObject -eq -1) {
+    if ($wingetResultObject -eq -1) {
         Write-Warning "nothing found"
     } elseif (($wingetResultObject.Count -eq 1) -and ($autoInstallIfOnlyOneFound -eq $true)) {
         Install-WinGetPackage -Id $wingetResultObject.Id
@@ -120,8 +120,8 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
             [uint16]$userinput = Read-Host -Prompt 'enter number to install package (ENTER to exit)'
 
             # do nothing when ENTER is pressed (which results in $userinput being '0')
-            if($userinput -ne 0) {
-                if(($userinput -lt $counter) -and ($userinput -ge 1)) {
+            if ($userinput -ne 0) {
+                if (($userinput -lt $counter) -and ($userinput -ge 1)) {
                     Install-WinGetPackage -Id $selectionArray.$userinput
                 } else {
                     Write-Error 'wrong input'
@@ -140,7 +140,7 @@ function Install-WinGetPackage($Id) {
 
 function Invoke-WinGet {
     [Alias("apt")]
-    PARAM () # empty PARAM is needed to make alias work and still make use of args
+    param () # empty PARAM is needed to make alias work and still make use of args
 
     if ($args.Length -gt 0) {
         $command, $paramterArray = $args
@@ -172,4 +172,18 @@ function Invoke-WinGet {
     } else {
         Write-Error 'command (and parameter) missing'
     }
+}
+}
+
+foreach ($parameter in $paramterArray) {
+    Invoke-WinGetQuery -searchString $parameter -autoInstallIfOnlyOneFound $autoinstall
+}
+}
+default {
+    Write-Error "command ""$command"" not valid"
+}
+}
+} else {
+    Write-Error 'command (and parameter) missing'
+}
 }
