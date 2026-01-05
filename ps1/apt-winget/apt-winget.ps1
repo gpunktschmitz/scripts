@@ -24,7 +24,7 @@ function Get-WinGetResultDelimiterArrayNumber($wingetResult) {
 function Get-WingetHeaderPositionArray($wingetHeader) {
     $counter = 0
     foreach ($char in $wingetHeader.ToCharArray()) {
-        if ($char -cmatch "^[A-Z]*$") {
+        if ($char -cmatch '^[A-Z]*$') {
             $counter
         }
         $counter++
@@ -59,7 +59,7 @@ function Get-WinGetResultObject($wingetResult) {
     if ($delimiterArrayNumber -gt 0) {
         $wingetHeader = $wingetResult[$delimiterArrayNumber - 1]
         $wingetHeaderPositionArray = Get-WingetHeaderPositionArray -wingetHeader $wingetHeader
-        $wingetHeaderArray = $wingetHeader.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+        $wingetHeaderArray = $wingetHeader.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
 
         $counter = 0
         foreach ($line in $wingetResult) {
@@ -74,13 +74,24 @@ function Get-WinGetResultObject($wingetResult) {
 }
 
 function Invoke-WinGetUpgrade($all = $true) {
-    Write-Host "upgrading winget"
+    Write-Host 'upgrading winget'
     if ($all) {
         $allString = ' --all'
     } else {
         $allString = ''
     }
     $argumentList = "upgrade --accept-package-agreements --accept-source-agreements --disable-interactivity $allString"
+    Start-Process 'winget' -ArgumentList $argumentList -NoNewWindow -Wait
+}
+
+function Invoke-WinGetUpdate($includePinned = $false) {
+    Write-Host 'updating winget'
+    if ($includePinned) {
+        $includePinnedString = ' --include-pinned'
+    } else {
+        $includePinnedString = ''
+    }
+    $argumentList = "update $includePinnedString"
     Start-Process 'winget' -ArgumentList $argumentList -NoNewWindow -Wait
 }
 
@@ -91,7 +102,7 @@ function Invoke-WinGetQuery($searchString, $autoInstallIfOnlyOneFound = $false) 
     $wingetResultObject = @(Get-WinGetResultObject -wingetResult $searchResult)
 
     if ($wingetResultObject -eq -1) {
-        Write-Warning "nothing found"
+        Write-Warning 'nothing found'
     } elseif (($wingetResultObject.Count -eq 1) -and ($autoInstallIfOnlyOneFound -eq $true)) {
         Install-WinGetPackage -Id $wingetResultObject.Id
     } else {
@@ -139,23 +150,26 @@ function Install-WinGetPackage($Id) {
 }
 
 function Invoke-WinGet {
-    [Alias("apt")]
+    [Alias('apt')]
     param () # empty PARAM is needed to make alias work and still make use of args
 
     if ($args.Length -gt 0) {
         $command, $paramterArray = $args
 
         switch -regex ($command) {
-            "help" {
+            'help' {
                 Write-Host "available commands:`n  list     Display installed packages`n  search   Find and show packages to install`n  install  Installs the given package`n  upgrade  Performs available upgrades`n  help     Shows this help message"
             }
-            "upgrade" {
+            'upgrade' {
                 Invoke-WinGetUpgrade
             }
-            "list" {
+            'update' {
+                Invoke-WinGetUpdate
+            }
+            'list' {
                 Get-WinGetList
             }
-            "^(search|install)$" {
+            '^(search|install)$' {
                 $autoinstall = $false
                 if ($command -eq 'install') {
                     $autoinstall = $true
@@ -172,18 +186,4 @@ function Invoke-WinGet {
     } else {
         Write-Error 'command (and parameter) missing'
     }
-}
-}
-
-foreach ($parameter in $paramterArray) {
-    Invoke-WinGetQuery -searchString $parameter -autoInstallIfOnlyOneFound $autoinstall
-}
-}
-default {
-    Write-Error "command ""$command"" not valid"
-}
-}
-} else {
-    Write-Error 'command (and parameter) missing'
-}
 }
